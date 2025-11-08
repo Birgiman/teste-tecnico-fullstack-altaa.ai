@@ -1,0 +1,27 @@
+{
+  "name": "teste-tecnico-fullstack-altaa.ai-multitenant",
+  "version": "1.0.0",
+  "description": "Teste técnico fullstack para Altaa.ai Multitenant",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Birgiman/teste-tecnico-fullstack-altaa.ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Birgiman/teste-tecnico-fullstack-altaa.ai/issues"
+  },
+  "homepage": "https://github.com/Birgiman/teste-tecnico-fullstack-altaa.ai#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "husky": "^9.1.7"
+  }
+}

@@ -4,7 +4,8 @@
   "description": "Backend for Altaa.ai Multitenant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +18,17 @@
     "bcrypt": "^6.0.0",
     "fastify": "^5.6.1",
     "prisma": "^6.19.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3",
-    "zod": "^4.1.12"
+    "typescript-eslint": "^8.46.3"
   }
 }
