@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: altaa-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: altaadb
+      POSTGRES_USER: altaa_user
+      POSTGRES_PASSWORD: essaeumasenhadetesteapenasparatestesdetestesdosistema
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: altaa-backend
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://altaa_user:essaeumasenhadetesteapenasparatestesdetestesdosistema@postgres:5432/altaadb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  pgdata:
