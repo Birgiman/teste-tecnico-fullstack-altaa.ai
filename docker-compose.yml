@@ -29,6 +29,7 @@ services:
     command: npm run dev
 
   prisma-studio:
+    container_name: altaa-prisma-studio
     image: node:22-alpine
     working_dir: /app
     volumes:

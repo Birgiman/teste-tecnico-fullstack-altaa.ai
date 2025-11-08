@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "docker:start": "docker compose up --build -d && docker compose logs -f",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "docker:stop": "docker compose stop"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,7 @@ app.get(
   '/',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (request, reply) => {
-    return { message: 'Backend rodando com Fastify!'}
+    return { message: 'Backend rodando com Fastify!!!!!!'}
   }
 )
 
