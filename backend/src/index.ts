@@ -1,9 +1,8 @@
-import { registerRoutes } from '@/routes/index.js';
+import { registerPublicRoutes } from '@/routes/index.js';
 import { FastifyErr, Reply, Req } from '@/types/fastify.types.js';
 import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
-import ScalarApiReference from '@scalar/fastify-api-reference';
 import 'dotenv/config';
 import { fastify } from 'fastify';
 import {
@@ -12,6 +11,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import protectedRoutes from './routes/protected.routes.js';
 
 function getEnvVars(name: string): string {
   const value = process.env[name];
@@ -47,7 +47,7 @@ app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
 await app.register(fastifyCors, {
-  origin: frontEndUrl,
+  origin: ['*'],
   credentials: true, //envia cookies automaticamente
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 });
@@ -68,11 +68,9 @@ await app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 });
 
-await app.register(ScalarApiReference, {
-  routePrefix: '/docs',
-});
+await registerPublicRoutes(app);
 
-await registerRoutes(app);
+await app.register(protectedRoutes);
 
 app.setErrorHandler((error: FastifyErr, req: Req, reply: Reply) => {
   if (error instanceof Error && error.name === 'ZodError') {

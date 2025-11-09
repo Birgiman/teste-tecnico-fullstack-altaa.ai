@@ -38,5 +38,6 @@ module.exports = {
     ],
     'type-case': [0], // Desabilita validação de case para type
     'subject-case': [0],
+    'body-max-line-length': [0], // Desabilita validação de tamanho máximo das linhas do corpo
   },
 };
