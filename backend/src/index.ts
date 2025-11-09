@@ -1,4 +1,5 @@
 import { registerRoutes } from '@/routes/index.js';
+import { FastifyErr, Reply, Req } from '@/types/fastify.types.js';
 import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
@@ -73,16 +74,16 @@ await app.register(ScalarApiReference, {
 
 await registerRoutes(app);
 
-app.setErrorHandler((error, req, res) => {
+app.setErrorHandler((error: FastifyErr, req: Req, reply: Reply) => {
   if (error instanceof Error && error.name === 'ZodError') {
-    return res.status(401).send({
+    return reply.status(401).send({
       success: false,
       message: error.message,
     });
   }
 
   app.log.error(error);
-  res.status(500).send({ error: error.message || 'Internal Server Error' });
+  reply.status(500).send({ error: error.message || 'Internal Server Error' });
 });
 
 app.listen({ port, host }, (err: Error | null) => {
