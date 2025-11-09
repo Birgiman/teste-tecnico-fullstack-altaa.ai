@@ -1,3 +1,4 @@
+import { registerRoutes } from '@/routes/index.js';
 import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
@@ -14,7 +15,7 @@ import {
 function getEnvVars(name: string): string {
   const value = process.env[name];
   if (!value) {
-    throw new Error(`🔓 - Variável de ambiente ${name} não encontrada`);
+    throw new Error(`🔓 - Variável de ambiente "${name}" não encontrada`);
   }
   return value;
 }
@@ -23,8 +24,23 @@ const port = parseInt(getEnvVars('PORT'));
 const host = getEnvVars('HOST');
 const frontEndUrl = getEnvVars('FRONT_END_URL');
 const cookieSecret = getEnvVars('COOKIE_SECRET');
+const isDev = getEnvVars('NODE_ENV') !== 'production';
 
-const app = fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
+const app = fastify({
+  logger: isDev
+    ? {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            ignore: 'hostname,pid,time',
+            errorProps: 'message',
+            translateTime: 'HH:MM:ss',
+          },
+        },
+      }
+    : true,
+}).withTypeProvider<ZodTypeProvider>();
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
@@ -55,18 +71,19 @@ await app.register(ScalarApiReference, {
   routePrefix: '/docs',
 });
 
-app.setErrorHandler((error, request, reply) => {
-  app.log.error(error);
-  reply.status(500).send({ error: error.message || 'Internal Server Error' });
-});
+await registerRoutes(app);
 
-app.get(
-  '/',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (request, reply) => {
-    return { message: 'Backend rodando com Fastify!' };
-  },
-);
+app.setErrorHandler((error, req, res) => {
+  if (error instanceof Error && error.name === 'ZodError') {
+    return res.status(401).send({
+      success: false,
+      message: error.message,
+    });
+  }
+
+  app.log.error(error);
+  res.status(500).send({ error: error.message || 'Internal Server Error' });
+});
 
 app.listen({ port, host }, (err: Error | null) => {
   if (err) {

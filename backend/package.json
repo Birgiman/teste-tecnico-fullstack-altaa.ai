@@ -9,7 +9,9 @@
     "build": "tsc",
     "lint": "eslint .",
     "dev": "tsx watch src/index.ts",
-    "dev:mode": "concurrently \"tsx watch src/index.ts | pino-pretty --colorize --errorProps message, --ignore 'hostname,pid,time'\" \"docker start altaa-postgres\" \"npx prisma studio --port 5555 --hostname 0.0.0.0\""
+    "dev:docker": "docker start altaa-postgres",
+    "dev:prisma": "npx prisma studio --port 5555 --hostname 0.0.0.0",
+    "dev:mode": "concurrently -n \"SERVER,DOCKER,PRISMA\" -c \"blue,green,yellow\" --kill-others-on-fail=false --restart-tries=0 --raw \"npm run dev\" \"npm run dev:docker\" \"npm run dev:prisma\""
   },
   "keywords": [],
   "author": "",
@@ -25,13 +27,17 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
+    "fastify-plugin": "^5.1.0",
     "fastify-type-provider-zod": "^6.1.0",
+    "jsonwebtoken": "^9.0.2",
     "prisma": "^6.19.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@tsconfig/node22": "^22.0.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.0",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "@typescript-eslint/parser": "^8.46.3",
