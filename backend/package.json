@@ -4,8 +4,9 @@
   "description": "Backend for Altaa.ai Multitenant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No tests yet\" && exit 0",
     "start": "node dist/index.js",
+    "build": "tsc",
     "lint": "eslint . --ext .ts",
     "dev": "tsx watch src/index.ts",
     "dev:mode": "concurrently \"tsx watch src/index.ts | pino-pretty --colorize --errorProps message, --ignore 'hostname,pid,time'\" \"docker start altaa-postgres\" \"npx prisma studio --port 5555 --hostname 0.0.0.0\""
