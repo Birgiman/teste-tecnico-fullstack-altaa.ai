@@ -1,4 +1,4 @@
-import { registerPublicRoutes } from '@/routes/index.js';
+import { registerPublicRoutes } from '@/routes/public.routes.index.js';
 import { FastifyErr, Reply, Req } from '@/types/fastify.types.js';
 import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
@@ -11,7 +11,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import protectedRoutes from './routes/protected.routes.js';
+import protectedRoutesIndex from './routes/protected.routes.index.js';
 
 function getEnvVars(name: string): string {
   const value = process.env[name];
@@ -70,7 +70,7 @@ await app.register(fastifySwagger, {
 
 await registerPublicRoutes(app);
 
-await app.register(protectedRoutes);
+await app.register(protectedRoutesIndex);
 
 app.setErrorHandler((error: FastifyErr, req: Req, reply: Reply) => {
   if (error instanceof Error && error.name === 'ZodError') {
