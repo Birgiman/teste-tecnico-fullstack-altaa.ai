@@ -1,7 +1,16 @@
-import fastifyCookie from '@fastify/cookie';
-import fastifyCors from '@fastify/cors';
+import { fastifyCookie } from '@fastify/cookie';
+import { fastifyCors } from '@fastify/cors';
+import { fastifySwagger } from '@fastify/swagger';
+import ScalarApiReference from '@scalar/fastify-api-reference';
 import "dotenv/config";
-import Fastify from "fastify";
+import { fastify } from "fastify";
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+  type ZodTypeProvider
+} from 'fastify-type-provider-zod';
+
 
 function getEnvVars(name: string): string {
   const value = process.env[name];
@@ -16,16 +25,35 @@ const host = getEnvVars('HOST');
 const frontEndUrl = getEnvVars('FRONT_END_URL');
 const cookieSecret = getEnvVars('COOKIE_SECRET');
 
-const app = Fastify({ logger: true });
+const app = fastify({ logger: true }).withTypeProvider<ZodTypeProvider>();
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
 await app.register(fastifyCors, {
   origin: frontEndUrl,
-  credentials: true,
+  credentials: true, //envia cookies automaticamente
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 })
 
 await app.register(fastifyCookie, {
   secret: cookieSecret,
   parseOptions: {}
+})
+
+await app.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'Altaa.ai Multitenant API',
+      description: 'API para o projeto Altaa.ai Multitenant',
+      version: '1.0.0',
+    },
+  },
+  transform: jsonSchemaTransform,
+})
+
+await app.register(ScalarApiReference, {
+  routePrefix: '/docs',
 })
 
 app.setErrorHandler((error, request, reply) => {
@@ -48,5 +76,6 @@ app.listen({ port, host }, (err: Error | null) => {
   }
   console.log(`🚀 - Servidor rodando em http://${host}:${port}`);
   console.log(`🚧 - Prisma Studio disponível em http://${host}:5555`);
+  console.log(`📚 - Documentação disponível em http://${host}:${port}/docs`);
   console.log("🔛 - Ouvindo Front-End em", frontEndUrl);
 })
