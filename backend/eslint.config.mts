@@ -14,6 +14,7 @@ export default typescriptEslint.config(
       '**/dist/**',
       '**/generated/**',
       '**/.prisma/**',
+      '**/prisma.config.ts',
     ],
   },
   {

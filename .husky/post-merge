@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/h"
+
+echo "🔄 Executando npm install após merge..."
+
+npm install && echo "✅ Dependências atualizadas com sucesso!"

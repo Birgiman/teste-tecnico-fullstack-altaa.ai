@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -e
+
+echo "🔍 Executando lint no backend..."
+
+cd "$(dirname "$0")/../backend" && npm run lint && echo "✅ Lint passou com sucesso no backend!" || exit 1

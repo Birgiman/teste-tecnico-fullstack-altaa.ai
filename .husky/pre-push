@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+set -e
+
+echo "🚀 Executando build no backend..."
+
+cd "$(dirname "$0")/../backend" && npm run build && echo "✅ Build passou com sucesso no backend!" || exit 1
+
+echo "✅ Pronto para enviar ao repositório remoto!"
