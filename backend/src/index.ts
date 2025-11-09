@@ -2,15 +2,14 @@ import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
 import ScalarApiReference from '@scalar/fastify-api-reference';
-import "dotenv/config";
-import { fastify } from "fastify";
+import 'dotenv/config';
+import { fastify } from 'fastify';
 import {
+  type ZodTypeProvider,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
-  type ZodTypeProvider
 } from 'fastify-type-provider-zod';
-
 
 function getEnvVars(name: string): string {
   const value = process.env[name];
@@ -34,12 +33,12 @@ await app.register(fastifyCors, {
   origin: frontEndUrl,
   credentials: true, //envia cookies automaticamente
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-})
+});
 
 await app.register(fastifyCookie, {
   secret: cookieSecret,
-  parseOptions: {}
-})
+  parseOptions: {},
+});
 
 await app.register(fastifySwagger, {
   openapi: {
@@ -50,24 +49,24 @@ await app.register(fastifySwagger, {
     },
   },
   transform: jsonSchemaTransform,
-})
+});
 
 await app.register(ScalarApiReference, {
   routePrefix: '/docs',
-})
+});
 
 app.setErrorHandler((error, request, reply) => {
   app.log.error(error);
-  reply.status(500).send({ error: error.message || 'Internal Server Error'})
-})
+  reply.status(500).send({ error: error.message || 'Internal Server Error' });
+});
 
 app.get(
   '/',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (request, reply) => {
-    return { message: 'Backend rodando com Fastify!'}
-  }
-)
+    return { message: 'Backend rodando com Fastify!' };
+  },
+);
 
 app.listen({ port, host }, (err: Error | null) => {
   if (err) {
@@ -77,5 +76,5 @@ app.listen({ port, host }, (err: Error | null) => {
   console.log(`🚀 - Servidor rodando em http://${host}:${port}`);
   console.log(`🚧 - Prisma Studio disponível em http://${host}:5555`);
   console.log(`📚 - Documentação disponível em http://${host}:${port}/docs`);
-  console.log("🔛 - Ouvindo Front-End em", frontEndUrl);
-})
+  console.log('🔛 - Ouvindo Front-End em', frontEndUrl);
+});

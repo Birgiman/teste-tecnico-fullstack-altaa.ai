@@ -7,7 +7,7 @@
     "test": "echo \"No tests yet\" && exit 0",
     "start": "node dist/index.js",
     "build": "tsc",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "dev": "tsx watch src/index.ts",
     "dev:mode": "concurrently \"tsx watch src/index.ts | pino-pretty --colorize --errorProps message, --ignore 'hostname,pid,time'\" \"docker start altaa-postgres\" \"npx prisma studio --port 5555 --hostname 0.0.0.0\""
   },
@@ -37,9 +37,12 @@
     "@typescript-eslint/parser": "^8.46.3",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
     "jiti": "^2.6.1",
     "pino-pretty": "^13.1.2",
+    "prettier": "^3.6.2",
     "tsx": "^4.19.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3"
