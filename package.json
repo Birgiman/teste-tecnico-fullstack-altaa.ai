@@ -4,7 +4,7 @@
   "description": "Teste técnico fullstack para Altaa.ai Multitenant",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No tests yet\" && exit 0",
     "prepare": "husky install",
     "docker:start": "docker compose up --build -d && docker compose logs -f",
     "docker:down": "docker compose down",
