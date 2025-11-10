@@ -2,6 +2,7 @@ import {
   companyIdSchema,
   createCompanySchema,
   listCompaniesSchema,
+  selectActiveCompanySchema,
   updateCompanySchema,
 } from '@/schemas/company.schema.js';
 import {
@@ -9,6 +10,7 @@ import {
   deleteCompanyService,
   getCompanyService,
   listCompaniesService,
+  selectActiveCompanyService,
   updateCompanyService,
 } from '@/services/company.service.js';
 import { Reply, Req } from '@/types/fastify.types.js';
@@ -73,5 +75,20 @@ export const deleteCompanyController = async (req: Req, res: Reply) => {
   return res.status(200).send({
     success: true,
     message: 'Empresa deletada com sucesso',
+  });
+};
+
+export const selectActiveCompanyController = async (req: Req, res: Reply) => {
+  const userId = req.user!.userId;
+  const { id } = selectActiveCompanySchema.parse(req.params);
+
+  const result = await selectActiveCompanyService(userId, id);
+
+  return res.status(200).send({
+    success: true,
+    message: result.message,
+    data: {
+      activeCompanyId: result.activeCompanyId,
+    },
   });
 };

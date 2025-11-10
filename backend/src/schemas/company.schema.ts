@@ -38,7 +38,12 @@ export const companyIdSchema = z.object({
   id: z.uuid('ID inválido'),
 });
 
+export const selectActiveCompanySchema = companyIdSchema;
+
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 export type UpdateCompanyInput = z.infer<typeof updateCompanySchema>;
 export type ListCompaniesInput = z.infer<typeof listCompaniesSchema>;
 export type CompanyIdInput = z.infer<typeof companyIdSchema>;
+export type SelectActiveCompanyInput = z.infer<
+  typeof selectActiveCompanySchema
+>;

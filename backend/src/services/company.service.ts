@@ -203,3 +203,31 @@ export const deleteCompanyService = async (
 
   return { message: 'Empresa deletada com sucesso' };
 };
+
+export const selectActiveCompanyService = async (
+  userId: string,
+  companyId: string,
+) => {
+  const membership = await prisma.membership.findUnique({
+    where: {
+      userId_companyId: {
+        userId,
+        companyId,
+      },
+    },
+  });
+
+  if (!membership) {
+    throw new Error('Você não é membro desta empresa');
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { activeCompanyId: companyId },
+  });
+
+  return {
+    message: 'Empresa ativa alterada com sucesso',
+    activeCompanyId: companyId,
+  };
+};
