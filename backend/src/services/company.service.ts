@@ -3,6 +3,7 @@ import type {
   CreateCompanyInput,
   UpdateCompanyInput,
 } from '@/schemas/company.schema.js';
+import { Role, RoleEnum } from '@/types/role.types.js';
 
 export const createCompanyService = async (
   userId: string,
@@ -15,7 +16,7 @@ export const createCompanyService = async (
       members: {
         create: {
           userId,
-          role: 'OWNER',
+          role: RoleEnum.OWNER,
         },
       },
     },
@@ -143,7 +144,7 @@ export const updateCompanyService = async (
     throw new Error('Empresa não encontrada ou você não é membro dela');
   }
 
-  if (!['OWNER', 'ADMIN'].includes(membership.role)) {
+  if (!([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(membership.role)) {
     throw new Error('Você não tem permissão para editar esta empresa');
   }
 
@@ -188,7 +189,7 @@ export const deleteCompanyService = async (
     throw new Error('Empresa não encontrada');
   }
 
-  if (membership.role !== 'OWNER') {
+  if (membership.role !== RoleEnum.OWNER) {
     throw new Error('Apenas o criador pode deletar a empresa');
   }
 

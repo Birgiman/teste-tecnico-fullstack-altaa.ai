@@ -16,13 +16,14 @@ const parseDuration = (duration: string): number => {
 };
 
 export const getJwtCookieOptions = (): CookieSerializeOptions => {
-  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
+  const expiresIn = process.env.JWT_EXPIRES_IN;
 
+  console.log('getJwtCookieOptions', expiresIn);
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: parseDuration(expiresIn),
+    maxAge: parseDuration(expiresIn!),
   };
 };
