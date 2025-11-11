@@ -9,6 +9,7 @@ import {
   updateMemberRoleController,
 } from '@/controllers/company.controller.js';
 import {
+  authorizeMember,
   authorizeOwner,
   authorizeOwnerOrAdmin,
 } from '@/middlewares/authorize.middleware.js';
@@ -20,7 +21,11 @@ export default fp(
 
     app.post('/company', createCompanyController);
 
-    app.get('/company/:id', getCompanyController);
+    app.get(
+      '/company/:id',
+      { preHandler: [authorizeMember()] },
+      getCompanyController,
+    );
 
     app.post('/company/:id/select', selectActiveCompanyController);
 
