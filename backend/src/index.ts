@@ -1,5 +1,5 @@
+import { setupGlobalErrorHandler } from '@/middlewares/global-error-handler.middleware.js';
 import { registerPublicRoutes } from '@/routes/public.routes.index.js';
-import { FastifyErr, Reply, Req } from '@/types/fastify.types.js';
 import { fastifyCookie } from '@fastify/cookie';
 import { fastifyCors } from '@fastify/cors';
 import { fastifySwagger } from '@fastify/swagger';
@@ -46,6 +46,8 @@ const app = fastify({
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
+setupGlobalErrorHandler(app);
+
 await app.register(fastifyCors, {
   origin: ['*'],
   credentials: true, //envia cookies automaticamente
@@ -71,18 +73,6 @@ await app.register(fastifySwagger, {
 await registerPublicRoutes(app);
 
 await app.register(protectedRoutesIndex);
-
-app.setErrorHandler((error: FastifyErr, req: Req, reply: Reply) => {
-  if (error instanceof Error && error.name === 'ZodError') {
-    return reply.status(401).send({
-      success: false,
-      message: error.message,
-    });
-  }
-
-  app.log.error(error);
-  reply.status(500).send({ error: error.message || 'Internal Server Error' });
-});
 
 app.listen({ port, host }, (err: Error | null) => {
   if (err) {

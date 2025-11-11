@@ -1,10 +1,12 @@
 import { prisma } from '@/lib/prisma.js';
-import { LoginSchema, SignupSchema } from '@/schemas/auth.schema.js';
+import { loginSchema, signupSchema } from '@/schemas/auth.schema.js';
+import { createAppError } from '@/utils/app-error.util.js';
 import { generateJwtToken } from '@/utils/jwt.utils.js';
 import bcrypt from 'bcrypt';
 
-export const signupService = async (data: SignupSchema) => {
-  const { name, email, password } = data;
+export const signupService = async (data: unknown) => {
+  const validatedData = signupSchema.parse(data);
+  const { name, email, password } = validatedData;
 
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -13,7 +15,7 @@ export const signupService = async (data: SignupSchema) => {
   });
 
   if (existingUser) {
-    throw new Error('Usuário já cadastrado');
+    throw createAppError('USER_ALREADY_EXISTS');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -40,8 +42,9 @@ export const signupService = async (data: SignupSchema) => {
   };
 };
 
-export const loginService = async (data: LoginSchema) => {
-  const { email, password } = data;
+export const loginService = async (data: unknown) => {
+  const validatedData = loginSchema.parse(data);
+  const { email, password } = validatedData;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -50,12 +53,12 @@ export const loginService = async (data: LoginSchema) => {
   });
 
   if (!user) {
-    throw new Error('Credenciais inválidas');
+    throw createAppError('INVALID_CREDENTIALS');
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new Error('Credenciais inválidas');
+    throw createAppError('INVALID_CREDENTIALS');
   }
 
   const token = generateJwtToken({
