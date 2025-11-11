@@ -1,6 +1,48 @@
 #!/usr/bin/env sh
 set -e
 
-echo "🔍 Executando lint no backend..."
+# Função que executa lint em um diretório (backend, frontend, etc)
+run_lint() {
+  local DIR="$1"
+  local LABEL="$2"
 
-cd "$(dirname "$0")/../backend" && npm run lint && echo "✅ Lint passou com sucesso no backend!" || exit 1
+  echo "🔍 Executando lint em: $LABEL..."
+
+  cd "$(dirname "$0")/../$DIR"
+
+  if npm run lint; then
+    echo "✅ Lint passou com sucesso em: $LABEL!"
+  else
+    echo "⚠️  Lint encontrou problemas em: $LABEL. Tentando aplicar correções automáticas..."
+    
+    npm run lint -- --fix
+    
+    echo "🔁 Re-adicionando arquivos corrigidos..."
+    git add -u
+
+    if npm run lint; then
+      echo "✅ Problemas corrigidos automaticamente em: $LABEL!"
+    else
+      echo "❌ Ainda existem erros de lint que precisam ser corrigidos manualmente em: $LABEL."
+      echo "🔒 Commit abortado."
+      exit 1
+    fi
+  fi
+
+  # Retorna para a raiz do repositório antes de prosseguir
+  cd - > /dev/null
+}
+
+echo "🚀 Iniciando verificação de lint em todos os módulos..."
+
+# Rodar lint no backend
+run_lint "backend" "Backend"
+
+# Rodar lint no frontend (se existir)
+if [ -d "$(dirname "$0")/../frontend" ]; then
+  run_lint "frontend" "Frontend"
+else
+  echo "ℹ️  Diretório frontend não encontrado. Pulando..."
+fi
+
+echo "🎉 Todos os linters passaram com sucesso! Prosseguindo com o commit..."
