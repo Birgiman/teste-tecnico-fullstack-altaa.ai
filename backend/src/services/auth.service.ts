@@ -1,12 +1,11 @@
 import { prisma } from '@/lib/prisma.js';
-import { loginSchema, signupSchema } from '@/schemas/auth.schema.js';
+import type { LoginInput, SignupInput } from '@/schemas/auth.schema.js';
 import { createAppError } from '@/utils/app-error.util.js';
 import { generateJwtToken } from '@/utils/jwt.utils.js';
 import bcrypt from 'bcrypt';
 
-export const signupService = async (data: unknown) => {
-  const validatedData = signupSchema.parse(data);
-  const { name, email, password } = validatedData;
+export const signupService = async (data: SignupInput) => {
+  const { name, email, password } = data;
 
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -42,9 +41,8 @@ export const signupService = async (data: unknown) => {
   };
 };
 
-export const loginService = async (data: unknown) => {
-  const validatedData = loginSchema.parse(data);
-  const { email, password } = validatedData;
+export const loginService = async (data: LoginInput) => {
+  const { email, password } = data;
 
   const user = await prisma.user.findUnique({
     where: {

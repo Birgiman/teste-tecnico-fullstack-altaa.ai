@@ -153,9 +153,11 @@ export const updateCompanyService = async (
   }
 
   if (
-    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Array<typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN>).includes(
-      membership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN,
-    )
+    !(
+      [RoleEnum.OWNER, RoleEnum.ADMIN] as Array<
+        typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN
+      >
+    ).includes(membership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN)
   ) {
     throw createAppError('NO_PERMISSION_TO_EDIT');
   }
@@ -266,7 +268,11 @@ export const removeMemberService = async (
   }
 
   if (
-    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Array<typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN>).includes(
+    !(
+      [RoleEnum.OWNER, RoleEnum.ADMIN] as Array<
+        typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN
+      >
+    ).includes(
       requesterMembership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN,
     )
   ) {
@@ -337,7 +343,6 @@ export const updateMemberRoleService = async (
   if (requesterMembership.role !== RoleEnum.OWNER) {
     throw createAppError('NO_PERMISSION_TO_EDIT');
   }
-
 
   const targetMembership = await prisma.membership.findUnique({
     where: {

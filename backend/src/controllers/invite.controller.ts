@@ -12,15 +12,9 @@ import { Reply, Req } from '@/types/fastify.types.js';
 export const createInviteController = async (req: Req, res: Reply) => {
   const userId = req.user!.userId;
   const { id } = createInviteParamsSchema.parse(req.params);
-  const { email, role, expiresInDays } = createInviteSchema.parse(req.body);
+  const data = createInviteSchema.parse(req.body);
 
-  const invite = await createInviteService(
-    userId,
-    id,
-    email,
-    role,
-    expiresInDays,
-  );
+  const invite = await createInviteService(userId, id, data);
 
   return res.status(201).send({
     success: true,
@@ -38,9 +32,9 @@ export const createInviteController = async (req: Req, res: Reply) => {
 export const acceptInviteController = async (req: Req, res: Reply) => {
   const userId = req.user!.userId;
   const email = req.user!.email;
-  const { token } = acceptInviteSchema.parse(req.body);
+  const data = acceptInviteSchema.parse(req.body);
 
-  const result = await acceptInviteService(userId, email, token);
+  const result = await acceptInviteService(userId, email, data);
 
   return res.status(200).send({
     success: true,

@@ -1,15 +1,18 @@
 import { prisma } from '@/lib/prisma.js';
-import { Role, RoleEnum } from '@/types/role.types.js';
+import type {
+  AcceptInviteInput,
+  CreateInviteInput,
+} from '@/schemas/invite.schema.js';
+import { RoleEnum } from '@/types/role.types.js';
 import { createAppError } from '@/utils/app-error.util.js';
 import { generateInviteToken } from '@/utils/invite-token.util.js';
 
 export const createInviteService = async (
   requesterUserId: string,
   companyId: string,
-  email: string,
-  role: Role,
-  expiresInDays: number,
+  data: CreateInviteInput,
 ) => {
+  const { email, role, expiresInDays } = data;
   const requesterMembership = await prisma.membership.findUnique({
     where: {
       userId_companyId: {
@@ -24,8 +27,12 @@ export const createInviteService = async (
 
   if (
     !requesterMembership ||
-    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(
-      requesterMembership.role,
+    !(
+      [RoleEnum.OWNER, RoleEnum.ADMIN] as Array<
+        typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN
+      >
+    ).includes(
+      requesterMembership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN,
     )
   ) {
     throw createAppError('NO_PERMISSION_TO_INVITE');
@@ -83,8 +90,9 @@ export const createInviteService = async (
 export const acceptInviteService = async (
   currentUserId: string,
   currentUserEmail: string,
-  token: string,
+  data: AcceptInviteInput,
 ) => {
+  const { token } = data;
   const invite = await prisma.invite.findUnique({
     where: { token },
   });

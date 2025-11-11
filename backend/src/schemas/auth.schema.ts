@@ -25,5 +25,5 @@ export const loginSchema = z.object({
     .max(100, 'Senha muito longa'),
 });
 
-export type SignupSchema = z.infer<typeof signupSchema>;
-export type LoginSchema = z.infer<typeof loginSchema>;
+export type SignupInput = z.infer<typeof signupSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;

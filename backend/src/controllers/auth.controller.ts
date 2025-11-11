@@ -1,9 +1,11 @@
+import { loginSchema, signupSchema } from '@/schemas/auth.schema.js';
 import { loginService, signupService } from '@/services/auth.service.js';
 import { Reply, Req } from '@/types/fastify.types.js';
 import { getJwtCookieOptions } from '@/utils/cookie.utils.js';
 
 export const signupController = async (req: Req, res: Reply) => {
-  const { user, token } = await signupService(req.body);
+  const data = signupSchema.parse(req.body);
+  const { user, token } = await signupService(data);
 
   res.setCookie('token', token, getJwtCookieOptions());
 
@@ -15,7 +17,8 @@ export const signupController = async (req: Req, res: Reply) => {
 };
 
 export const loginController = async (req: Req, res: Reply) => {
-  const { user, token } = await loginService(req.body);
+  const data = loginSchema.parse(req.body);
+  const { user, token } = await loginService(data);
   res.setCookie('token', token, getJwtCookieOptions());
 
   return res.status(200).send({
