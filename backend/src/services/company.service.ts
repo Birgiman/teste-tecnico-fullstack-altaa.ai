@@ -23,7 +23,9 @@ export const createCompanyService = async (
     },
     include: {
       members: {
-        include: {
+        select: {
+          id: true,
+          role: true,
           user: {
             select: {
               id: true,
@@ -62,7 +64,9 @@ export const listCompaniesService = async (
       take: limit,
       include: {
         members: {
-          include: {
+          select: {
+            id: true,
+            role: true,
             user: {
               select: {
                 id: true,
@@ -107,7 +111,9 @@ export const getCompanyService = async (userId: string, companyId: string) => {
     },
     include: {
       members: {
-        include: {
+        select: {
+          id: true,
+          role: true,
           user: {
             select: {
               id: true,
@@ -157,7 +163,9 @@ export const updateCompanyService = async (
     },
     include: {
       members: {
-        include: {
+        select: {
+          id: true,
+          role: true,
           user: {
             select: {
               id: true,

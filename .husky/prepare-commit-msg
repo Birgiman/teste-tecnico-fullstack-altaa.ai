@@ -2,4 +2,4 @@
 set -e
 
 cd "$(dirname "$0")/.."
-npx --no -- commitlint --edit "$1" && echo "✅ Mensagem de commit validada com sucesso!"
+npx --no -- commitlint --edit "$1" && echo "🆙 Preparando para validar o commit..."
