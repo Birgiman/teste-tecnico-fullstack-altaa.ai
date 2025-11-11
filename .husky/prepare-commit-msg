@@ -1,2 +1,5 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/_/h"
+set -e
+
+cd "$(dirname "$0")/.."
+npx --no -- commitlint --edit "$1" && echo "✅ Mensagem de commit validada com sucesso!"

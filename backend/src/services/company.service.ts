@@ -233,3 +233,70 @@ export const selectActiveCompanyService = async (
     activeCompanyId: companyId,
   };
 };
+
+export const removeMemberService = async (
+  requesterUserId: string,
+  companyId: string,
+  targetUserId: string,
+) => {
+  const requesterMembership = await prisma.membership.findUnique({
+    where: {
+      userId_companyId: {
+        userId: requesterUserId,
+        companyId,
+      },
+    },
+  });
+
+  if (!requesterMembership) {
+    throw createAppError('USER_NOT_MEMBER');
+  }
+
+  if (
+    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(
+      requesterMembership.role,
+    )
+  ) {
+    throw createAppError('NO_PERMISSION_TO_EDIT');
+  }
+
+  const targetMembership = await prisma.membership.findUnique({
+    where: {
+      userId_companyId: {
+        userId: targetUserId,
+        companyId,
+      },
+    },
+  });
+
+  if (!targetMembership) {
+    throw createAppError('USER_NOT_MEMBER');
+  }
+
+  if (targetMembership.role !== RoleEnum.MEMBER) {
+    throw createAppError('MEMBER_REMOVAL_NOT_ALLOWED');
+  }
+
+  await prisma.membership.delete({
+    where: {
+      userId_companyId: {
+        userId: targetUserId,
+        companyId,
+      },
+    },
+  });
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+    select: { activeCompanyId: true },
+  });
+
+  if (targetUser?.activeCompanyId === companyId) {
+    await prisma.user.update({
+      where: { id: targetUserId },
+      data: { activeCompanyId: null },
+    });
+  }
+
+  return { message: 'Membro removido com sucesso' };
+};

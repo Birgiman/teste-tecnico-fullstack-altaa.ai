@@ -35,6 +35,7 @@ export const AppErrorMessages = {
   USER_ALREADY_MEMBER: 'Usuário já é membro desta empresa',
   NO_PERMISSION_TO_EDIT: 'Você não tem permissão para editar esta empresa',
   ONLY_OWNER_CAN_DELETE: 'Apenas o criador pode deletar a empresa',
+  MEMBER_REMOVAL_NOT_ALLOWED: 'Você não pode remover este membro',
 
   // Convites
   INVITE_NOT_FOUND: 'Convite não encontrado',
@@ -61,6 +62,7 @@ export const AppErrorCodeMap: Record<
   USER_ALREADY_MEMBER: HttpStatusCode.CONFLICT,
   NO_PERMISSION_TO_EDIT: HttpStatusCode.FORBIDDEN,
   ONLY_OWNER_CAN_DELETE: HttpStatusCode.FORBIDDEN,
+  MEMBER_REMOVAL_NOT_ALLOWED: HttpStatusCode.FORBIDDEN,
 
   // Convites
   INVITE_NOT_FOUND: HttpStatusCode.NOT_FOUND,

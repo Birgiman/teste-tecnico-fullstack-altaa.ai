@@ -40,6 +40,11 @@ export const companyIdSchema = z.object({
 
 export const selectActiveCompanySchema = companyIdSchema;
 
+export const removeMemberParamsSchema = z.object({
+  id: z.uuid('ID da empresa inválido'),
+  userId: z.uuid('ID do usuário inválido'),
+});
+
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 export type UpdateCompanyInput = z.infer<typeof updateCompanySchema>;
 export type ListCompaniesInput = z.infer<typeof listCompaniesSchema>;

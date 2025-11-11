@@ -2,6 +2,7 @@ import {
   companyIdSchema,
   createCompanySchema,
   listCompaniesSchema,
+  removeMemberParamsSchema,
   selectActiveCompanySchema,
   updateCompanySchema,
 } from '@/schemas/company.schema.js';
@@ -10,6 +11,7 @@ import {
   deleteCompanyService,
   getCompanyService,
   listCompaniesService,
+  removeMemberService,
   selectActiveCompanyService,
   updateCompanyService,
 } from '@/services/company.service.js';
@@ -90,5 +92,18 @@ export const selectActiveCompanyController = async (req: Req, res: Reply) => {
     data: {
       activeCompanyId: result.activeCompanyId,
     },
+  });
+};
+
+export const removeMemberController = async (req: Req, res: Reply) => {
+  const requesterUserId = req.user!.userId;
+  const { id: companyId, userId: targetUserId } =
+    removeMemberParamsSchema.parse(req.params);
+
+  await removeMemberService(requesterUserId, companyId, targetUserId);
+
+  return res.status(200).send({
+    success: true,
+    message: 'Membro removido com sucesso',
   });
 };
