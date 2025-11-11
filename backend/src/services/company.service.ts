@@ -4,6 +4,7 @@ import type {
   UpdateCompanyInput,
 } from '@/schemas/company.schema.js';
 import { Role, RoleEnum } from '@/types/role.types.js';
+import { createAppError } from '@/utils/app-error.util.js';
 
 export const createCompanyService = async (
   userId: string,
@@ -120,7 +121,7 @@ export const getCompanyService = async (userId: string, companyId: string) => {
   });
 
   if (!company) {
-    throw new Error('Empresa não encontrada');
+    throw createAppError('COMPANY_NOT_FOUND');
   }
 
   return company;
@@ -141,11 +142,11 @@ export const updateCompanyService = async (
   });
 
   if (!membership) {
-    throw new Error('Empresa não encontrada ou você não é membro dela');
+    throw createAppError('COMPANY_NOT_FOUND');
   }
 
   if (!([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(membership.role)) {
-    throw new Error('Você não tem permissão para editar esta empresa');
+    throw createAppError('NO_PERMISSION_TO_EDIT');
   }
 
   const company = await prisma.company.update({
@@ -186,11 +187,11 @@ export const deleteCompanyService = async (
   });
 
   if (!membership) {
-    throw new Error('Empresa não encontrada');
+    throw createAppError('COMPANY_NOT_FOUND');
   }
 
   if (membership.role !== RoleEnum.OWNER) {
-    throw new Error('Apenas o criador pode deletar a empresa');
+    throw createAppError('ONLY_OWNER_CAN_DELETE');
   }
 
   await prisma.company.delete({
@@ -219,7 +220,7 @@ export const selectActiveCompanyService = async (
   });
 
   if (!membership) {
-    throw new Error('Você não é membro desta empresa');
+    throw createAppError('USER_NOT_MEMBER');
   }
 
   await prisma.user.update({

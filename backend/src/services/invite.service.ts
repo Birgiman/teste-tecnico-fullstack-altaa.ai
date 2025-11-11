@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma.js';
 import { Role, RoleEnum } from '@/types/role.types.js';
+import { createAppError } from '@/utils/app-error.util.js';
 import { generateInviteToken } from '@/utils/invite-token.util.js';
 
 export const createInviteService = async (
@@ -27,9 +28,7 @@ export const createInviteService = async (
       requesterMembership.role,
     )
   ) {
-    throw new Error(
-      'Você não tem permissão para convidar usuários nesta empresa',
-    );
+    throw createAppError('NO_PERMISSION_TO_INVITE');
   }
 
   const existingUser = await prisma.user.findUnique({
@@ -47,7 +46,7 @@ export const createInviteService = async (
     });
 
     if (alreadyMember) {
-      throw new Error('Usuário já é membro desta empresa');
+      throw createAppError('USER_ALREADY_MEMBER');
     }
   }
 
@@ -91,15 +90,15 @@ export const acceptInviteService = async (
   });
 
   if (!invite) {
-    throw new Error('Convite inválido');
+    throw createAppError('INVITE_INVALID');
   }
 
   if (invite.expiresAt <= new Date()) {
-    throw new Error('Convite expirado');
+    throw createAppError('INVITE_EXPIRED');
   }
 
   if (invite.email.toLowerCase() !== currentUserEmail.toLowerCase()) {
-    throw new Error('Convite não corresponde ao seu e-mail');
+    throw createAppError('INVITE_EMAIL_MISMATCH');
   }
 
   const alreadyMember = await prisma.membership.findUnique({

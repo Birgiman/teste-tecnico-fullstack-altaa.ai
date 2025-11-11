@@ -38,7 +38,9 @@ export const AppErrorMessages = {
 
   // Convites
   INVITE_NOT_FOUND: 'Convite não encontrado',
+  INVITE_INVALID: 'Convite inválido',
   INVITE_EXPIRED: 'Convite expirado',
+  INVITE_EMAIL_MISMATCH: 'Convite não corresponde ao seu e-mail',
   INVITE_ALREADY_ACCEPTED: 'Convite já foi aceito',
 } as const;
 
@@ -62,6 +64,8 @@ export const AppErrorCodeMap: Record<
 
   // Convites
   INVITE_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  INVITE_INVALID: HttpStatusCode.NOT_FOUND,
   INVITE_EXPIRED: HttpStatusCode.BAD_REQUEST,
+  INVITE_EMAIL_MISMATCH: HttpStatusCode.BAD_REQUEST,
   INVITE_ALREADY_ACCEPTED: HttpStatusCode.CONFLICT,
 } as const;
