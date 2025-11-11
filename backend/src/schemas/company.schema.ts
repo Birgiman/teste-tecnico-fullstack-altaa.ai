@@ -1,3 +1,4 @@
+import { ROLE_VALUES } from '@/types/role.types.js';
 import { z } from 'zod';
 
 export const createCompanySchema = z.object({
@@ -45,6 +46,21 @@ export const removeMemberParamsSchema = z.object({
   userId: z.uuid('ID do usuário inválido'),
 });
 
+export const updateMemberRoleParamsSchema = z.object({
+  id: z.uuid('ID da empresa inválido'),
+  userId: z.uuid('ID do usuário inválido'),
+});
+
+export const updateMemberRoleSchema = z.object({
+  role: z.enum(
+    ROLE_VALUES.filter((role) => role !== 'OWNER') as ['ADMIN', 'MEMBER'],
+    {
+      message:
+        'Role deve ser ADMIN ou MEMBER. OWNER não pode ser atribuído ou alterado.',
+    },
+  ),
+});
+
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 export type UpdateCompanyInput = z.infer<typeof updateCompanySchema>;
 export type ListCompaniesInput = z.infer<typeof listCompaniesSchema>;
@@ -52,3 +68,7 @@ export type CompanyIdInput = z.infer<typeof companyIdSchema>;
 export type SelectActiveCompanyInput = z.infer<
   typeof selectActiveCompanySchema
 >;
+export type UpdateMemberRoleParamsInput = z.infer<
+  typeof updateMemberRoleParamsSchema
+>;
+export type UpdateMemberRoleInput = z.infer<typeof updateMemberRoleSchema>;

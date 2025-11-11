@@ -6,6 +6,7 @@ import {
   removeMemberController,
   selectActiveCompanyController,
   updateCompanyController,
+  updateMemberRoleController,
 } from '@/controllers/company.controller.js';
 import {
   authorizeOwner,
@@ -39,6 +40,12 @@ export default fp(
       '/company/:id/members/:userId',
       { preHandler: [authorizeOwnerOrAdmin()] },
       removeMemberController,
+    );
+
+    app.patch(
+      '/company/:id/members/:userId',
+      { preHandler: [authorizeOwner()] },
+      updateMemberRoleController,
     );
   },
   {

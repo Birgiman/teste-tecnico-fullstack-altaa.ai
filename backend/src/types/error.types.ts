@@ -36,6 +36,9 @@ export const AppErrorMessages = {
   NO_PERMISSION_TO_EDIT: 'Você não tem permissão para editar esta empresa',
   ONLY_OWNER_CAN_DELETE: 'Apenas o criador pode deletar a empresa',
   MEMBER_REMOVAL_NOT_ALLOWED: 'Você não pode remover este membro',
+  CANNOT_REMOVE_OWNER: 'OWNER não pode ser removido da empresa',
+  CANNOT_UPDATE_OWNER_ROLE: 'OWNER não pode ter seu role alterado',
+  CANNOT_PROMOTE_TO_OWNER: 'Não é possível promover membro para OWNER',
 
   // Convites
   INVITE_NOT_FOUND: 'Convite não encontrado',
@@ -63,6 +66,9 @@ export const AppErrorCodeMap: Record<
   NO_PERMISSION_TO_EDIT: HttpStatusCode.FORBIDDEN,
   ONLY_OWNER_CAN_DELETE: HttpStatusCode.FORBIDDEN,
   MEMBER_REMOVAL_NOT_ALLOWED: HttpStatusCode.FORBIDDEN,
+  CANNOT_REMOVE_OWNER: HttpStatusCode.FORBIDDEN,
+  CANNOT_UPDATE_OWNER_ROLE: HttpStatusCode.FORBIDDEN,
+  CANNOT_PROMOTE_TO_OWNER: HttpStatusCode.BAD_REQUEST,
 
   // Convites
   INVITE_NOT_FOUND: HttpStatusCode.NOT_FOUND,

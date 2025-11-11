@@ -2,8 +2,9 @@ import { prisma } from '@/lib/prisma.js';
 import type {
   CreateCompanyInput,
   UpdateCompanyInput,
+  UpdateMemberRoleInput,
 } from '@/schemas/company.schema.js';
-import { Role, RoleEnum } from '@/types/role.types.js';
+import { RoleEnum } from '@/types/role.types.js';
 import { createAppError } from '@/utils/app-error.util.js';
 
 export const createCompanyService = async (
@@ -151,7 +152,11 @@ export const updateCompanyService = async (
     throw createAppError('COMPANY_NOT_FOUND');
   }
 
-  if (!([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(membership.role)) {
+  if (
+    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Array<typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN>).includes(
+      membership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN,
+    )
+  ) {
     throw createAppError('NO_PERMISSION_TO_EDIT');
   }
 
@@ -261,8 +266,8 @@ export const removeMemberService = async (
   }
 
   if (
-    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Role[]).includes(
-      requesterMembership.role,
+    !([RoleEnum.OWNER, RoleEnum.ADMIN] as Array<typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN>).includes(
+      requesterMembership.role as typeof RoleEnum.OWNER | typeof RoleEnum.ADMIN,
     )
   ) {
     throw createAppError('NO_PERMISSION_TO_EDIT');
@@ -281,8 +286,8 @@ export const removeMemberService = async (
     throw createAppError('USER_NOT_MEMBER');
   }
 
-  if (targetMembership.role !== RoleEnum.MEMBER) {
-    throw createAppError('MEMBER_REMOVAL_NOT_ALLOWED');
+  if (targetMembership.role === RoleEnum.OWNER) {
+    throw createAppError('CANNOT_REMOVE_OWNER');
   }
 
   await prisma.membership.delete({
@@ -307,4 +312,72 @@ export const removeMemberService = async (
   }
 
   return { message: 'Membro removido com sucesso' };
+};
+
+export const updateMemberRoleService = async (
+  requesterUserId: string,
+  companyId: string,
+  targetUserId: string,
+  data: UpdateMemberRoleInput,
+) => {
+  const { role: newRole } = data;
+  const requesterMembership = await prisma.membership.findUnique({
+    where: {
+      userId_companyId: {
+        userId: requesterUserId,
+        companyId,
+      },
+    },
+  });
+
+  if (!requesterMembership) {
+    throw createAppError('USER_NOT_MEMBER');
+  }
+
+  if (requesterMembership.role !== RoleEnum.OWNER) {
+    throw createAppError('NO_PERMISSION_TO_EDIT');
+  }
+
+
+  const targetMembership = await prisma.membership.findUnique({
+    where: {
+      userId_companyId: {
+        userId: targetUserId,
+        companyId,
+      },
+    },
+  });
+
+  if (!targetMembership) {
+    throw createAppError('USER_NOT_MEMBER');
+  }
+
+  if (targetMembership.role === RoleEnum.OWNER) {
+    throw createAppError('CANNOT_UPDATE_OWNER_ROLE');
+  }
+
+  const updatedMembership = await prisma.membership.update({
+    where: {
+      userId_companyId: {
+        userId: targetUserId,
+        companyId,
+      },
+    },
+    data: {
+      role: newRole,
+    },
+    select: {
+      id: true,
+      role: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return updatedMembership;
 };

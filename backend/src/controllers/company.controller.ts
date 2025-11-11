@@ -5,6 +5,8 @@ import {
   removeMemberParamsSchema,
   selectActiveCompanySchema,
   updateCompanySchema,
+  updateMemberRoleParamsSchema,
+  updateMemberRoleSchema,
 } from '@/schemas/company.schema.js';
 import {
   createCompanyService,
@@ -14,6 +16,7 @@ import {
   removeMemberService,
   selectActiveCompanyService,
   updateCompanyService,
+  updateMemberRoleService,
 } from '@/services/company.service.js';
 import { Reply, Req } from '@/types/fastify.types.js';
 
@@ -105,5 +108,25 @@ export const removeMemberController = async (req: Req, res: Reply) => {
   return res.status(200).send({
     success: true,
     message: 'Membro removido com sucesso',
+  });
+};
+
+export const updateMemberRoleController = async (req: Req, res: Reply) => {
+  const requesterUserId = req.user!.userId;
+  const { id: companyId, userId: targetUserId } =
+    updateMemberRoleParamsSchema.parse(req.params);
+  const data = updateMemberRoleSchema.parse(req.body);
+
+  const updatedMember = await updateMemberRoleService(
+    requesterUserId,
+    companyId,
+    targetUserId,
+    data,
+  );
+
+  return res.status(200).send({
+    success: true,
+    message: 'Cargo do membro atualizado com sucesso',
+    data: updatedMember,
   });
 };
