@@ -6,6 +6,17 @@ Aplicação multi-tenant completa para gerenciamento de empresas e usuários, de
 
 ---
 
+## 📒 Nota do desenvolvedor
+
+> Olá, se você está lendo isso já é o suficiente para mim. Gostaria de avisar que embora o teste técnico seja full-stack, atualmente este projeto possui
+> apenas o backend, pois durante o período do teste fui contratado por outra empresa.
+> Mas devo resaltar que o backend ficou 99.9% pronto, e já estava em fase de revisão final, para que eu partice para o front-end.
+>
+> Bom, é isso, quem sabe esse registro sirva de referência de boas práticas de programação para outros devs durante a sua jornada, aproveitem!
+
+
+---
+
 ## 🛠️ Stack Tecnológica
 
 ### Backend
@@ -111,7 +122,7 @@ Após iniciar o servidor, acesse:
 ```
 backend/
 ├── src/
-│   ├── controllers/     # Controladores (camada de requisição/resposta)
+│   ├── controllers/      # Controladores (camada de requisição/resposta)
 │   ├── services/         # Lógica de negócio
 │   ├── schemas/          # Schemas Zod para validação
 │   ├── middlewares/      # Middlewares (auth, authorize, error handler)
@@ -332,6 +343,11 @@ DATABASE_URL=postgresql://altaa_user:senha@localhost:5432/altaadb
 JWT_SECRET=seu_jwt_secret_aqui
 COOKIE_SECRET=seu_cookie_secret_aqui
 ```
+---
+
+## Tempo Gasto
+
+Dentre 3/4 dias, codando meio turno por dia.
 
 ---
 

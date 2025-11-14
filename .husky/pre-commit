@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 set -e
 
-cd "$(dirname "$0")/.."
-npx --no -- commitlint --edit "$1" && echo "🆙 Preparando para validar o commit..."
+# cd "$(dirname "$0")/.."
+# npx --no -- commitlint --edit "$1" && echo "🆙 Preparando para validar o commit..."

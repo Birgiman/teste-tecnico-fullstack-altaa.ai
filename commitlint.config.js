@@ -3,7 +3,7 @@ module.exports = {
   parserPreset: {
     parserOpts: {
       headerPattern: /^(.*?)([A-Za-z]+)(?:\((.*)\))?:\s*(.*)$/,
-      headerCorrespondence: ['emoji', 'type', 'scope', 'subject'],
+      headerCorrespondence: ['gitmoji', 'type', 'scope', 'subject'],
     },
   },
   rules: {
@@ -34,6 +34,18 @@ module.exports = {
         'Revert',
         'Style',
         'Test',
+        // Adicionando tipos de commit do GitMoji CLI
+        'Docs',
+        'Feat',
+        'Fix',
+        'Perf',
+        'Refactor',
+        'Revert',
+        'Style',
+        'Test',
+        'Build',
+        'Chore',
+        'Ci',
       ],
     ],
     'type-case': [0], // Desabilita validação de case para type

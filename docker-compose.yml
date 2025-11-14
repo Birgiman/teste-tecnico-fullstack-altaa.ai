@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: altaa-postgres
-    restart: always
+    restart: no
     environment:
       POSTGRES_DB: altaadb
       POSTGRES_USER: altaa_user
@@ -16,7 +16,7 @@ services:
     build:
       context: ./backend
     container_name: altaa-backend
-    restart: always
+    restart: no
     ports:
       - "4000:4000"
     depends_on:
@@ -26,7 +26,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: npm run dev
+    command: npm run build && npm start
 
   prisma-studio:
     container_name: altaa-prisma-studio
